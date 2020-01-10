@@ -7,6 +7,8 @@
 
 package frc.robot;
 
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -24,10 +26,16 @@ public class Robot extends TimedRobot {
   private String m_autoSelected;
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
 
+
   /**
    * This function is run when the robot is first started up and should be
    * used for any initialization code.
    */
+
+  //Talons
+   private WPI_TalonSRX frontRightMotor = new WPI_TalonSRX(1);
+   private WPI_TalonSRX frontLeftMotor = new WPI_TalonSRX(3);
+   
   @Override
   public void robotInit() {
     m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
