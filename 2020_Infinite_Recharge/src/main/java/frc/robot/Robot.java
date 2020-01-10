@@ -35,6 +35,11 @@ public class Robot extends TimedRobot {
   //Talons
    private WPI_TalonSRX frontRightMotor = new WPI_TalonSRX(1);
    private WPI_TalonSRX frontLeftMotor = new WPI_TalonSRX(3);
+
+   //Victors
+
+   private VictorSPX backRightMotor = new VictorSPX(2);
+   private VictorSPX backLeftMotor = new VictorSPX(4);
    
   @Override
   public void robotInit() {
