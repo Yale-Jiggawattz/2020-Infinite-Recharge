@@ -40,7 +40,7 @@ public class Robot extends TimedRobot {
 
   private DifferentialDrive _drive = new DifferentialDrive(_frontRightMotor, _frontLeftMotor);
 
- //Controls-----------------------------------------------------------------------------------------------------------------------------
+  //Controls-----------------------------------------------------------------------------------------------------------------------------
   
  private Joystick _joystick = new Joystick(0); 
 
