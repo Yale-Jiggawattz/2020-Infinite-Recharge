@@ -30,6 +30,16 @@ public class Robot extends TimedRobot {
   private String m_autoSelected;
   private final SendableChooser<String> m_chooser = new SendableChooser<>(); 
 
+ //ButtonsIntegers----------------------------------------------------------------------------------------------------------------
+
+  private Integer _manLiftUp = 11;
+  private Integer _manLiftDown = 12;
+
+ //Toggle--------------------------------------------------------------------------------------------------------------------------------------
+
+  private Toggle _upClimbTog = new Toggle();
+  private Toggle _downClimbTog = new Toggle();
+
   //Drive Train----------------------------------------------------------------------------------------------------------------------------
   
   private WPI_TalonSRX _frontRightMotor = new WPI_TalonSRX(1);
@@ -52,10 +62,7 @@ public class Robot extends TimedRobot {
   
   private VictorSPX _downbClimbMotor = new VictorSPX(6);
 
-  //Buttons/Integers----------------------------------------------------------------------------------------------------------------
-
-  private Integer _manLiftUp = 11;
-  private Integer _manLiftDown = 12;
+ 
   
   //Gyro--------------------------------------------------------
 
@@ -67,22 +74,17 @@ public class Robot extends TimedRobot {
   private DigitalInput _topSwitch = new DigitalInput(2);
 
   //Pneumatics
-  private Compressor _compressor = new Compressor(0);
+
   private DoubleSolenoid _tansSolnoid = new DoubleSolenoid(0, 1);
 
   //Drive Joystick Button Values
   private Integer _transSolnoidVal = 1;
 
-  //Toggles
     //Pneumatics
+
     private Toggle _transSolnoidTog = new Toggle();
 
-
-
-  //Toggle--------------------------------------------------------------------------------------------------------------------------------------
-
-  private Toggle _upClimbTog = new Toggle();
-  private Toggle _downClimbTog = new Toggle();
+ 
 
 
 
