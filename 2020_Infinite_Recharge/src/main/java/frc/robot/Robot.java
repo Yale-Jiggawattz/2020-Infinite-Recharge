@@ -7,7 +7,13 @@
 
 package frc.robot;
 
+import com.ctre.phoenix.motorcontrol.can.VictorSPX;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.interfaces.Gyro;
+import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -22,27 +28,65 @@ public class Robot extends TimedRobot {
   private static final String kDefaultAuto = "Default";
   private static final String kCustomAuto = "My Auto";
   private String m_autoSelected;
-  private final SendableChooser<String> m_chooser = new SendableChooser<>();
+  private final SendableChooser<String> m_chooser = new SendableChooser<>(); 
 
-  //up climb motor
-  private WPI_VictorSPX upClimbMotor = new WPI_TalonSRX();
+  //Drive Train----------------------------------------------------------------------------------------------------------------------------
   
-  //down climb motor
-  private WPI_VictorSPX downbClimbMotor = new WPI_TalonSRX();
+  private WPI_TalonSRX _frontRightMotor = new WPI_TalonSRX(1);
+  private WPI_TalonSRX _frontLeftMotor = new WPI_TalonSRX(3);
 
+  private VictorSPX _backRightMotor = new VictorSPX(2);
+  private VictorSPX _backLeftMotor = new VictorSPX(4);
+
+  DifferentialDrive driveFront = new DifferentialDrive(_frontRightMotor, _frontLeftMotor);
+
+ //Controls-----------------------------------------------------------------------------------------------------------------------------
   
+ private Joystick _joystick = new Joystick(0); 
+
+  //up climb motor------------------------------------------------------------------------------------------------------------------
+ 
+  private VictorSPX _upClimbMotor = new VictorSPX(5);
+  
+  //down climb motor---------------------------------------------------------------------------------------------------------------
+  
+  private VictorSPX _downbClimbMotor = new VictorSPX(6);
+  
+  //Gyro--------------------------------------------------------
+
+  private Gyro _gyro;
+
+
+
 
 
   /**
    * This function is run when the robot is first started up and should be
    * used for any initialization code.
    */
+    
   @Override
   public void robotInit() {
     m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
     m_chooser.addOption("My Auto", kCustomAuto);
     SmartDashboard.putData("Auto choices", m_chooser);
+   
+    //gyro------------------------------------------------------------------------
+
+    _gyro.getAngle();
+    
+    //Slaves-------------------------------------------------------------------------------------------------------------
+
+    _backLeftMotor.follow(_frontLeftMotor); 
+    _backRightMotor.follow(_frontRightMotor);
+
   }
+
+  
+
+  
+  
+  
 
   /**
    * This function is called every robot packet, no matter the mode. Use
@@ -95,6 +139,9 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
+
+    //Drive_Train
+    driveFront.arcadeDrive(_joystick.getY(), _joystick.getX());
   }
 
   /**
