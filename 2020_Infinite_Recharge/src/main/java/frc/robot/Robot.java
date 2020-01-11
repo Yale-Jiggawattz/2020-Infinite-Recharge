@@ -32,14 +32,18 @@ public class Robot extends TimedRobot {
    * used for any initialization code.
    */
 
-  //Talons
-   private WPI_TalonSRX frontRightMotor = new WPI_TalonSRX(1);
-   private WPI_TalonSRX frontLeftMotor = new WPI_TalonSRX(3);
+  //Drive Train
+   private WPI_TalonSRX _FrontRightMotor = new WPI_TalonSRX(1);
+   private WPI_TalonSRX _FrontLeftMotor = new WPI_TalonSRX(3);
 
-   //Victors
+   private VictorSPX _BackRightMotor = new VictorSPX(2);
+   private VictorSPX _BackLeftMotor = new VictorSPX(4);
 
-   private VictorSPX backRightMotor = new VictorSPX(2);
-   private VictorSPX backLeftMotor = new VictorSPX(4);
+   private DifferentialDrive driveFront = new DifferentialDrive(_FrontLeftMotor, _FrontRightMotor);
+
+  //Controls
+   private Joystick _Joystick = new Joystick(0);
+   
    
   @Override
   public void robotInit() {
@@ -47,6 +51,11 @@ public class Robot extends TimedRobot {
     m_chooser.addOption("My Auto", kCustomAuto);
     SmartDashboard.putData("Auto choices", m_chooser);
   }
+
+  //Slaves
+
+  _BackLeftMotor.follow(_FrontLeftMotor);
+  _BackRightMotor.follow(_FrontRightMotor);
 
   /**
    * This function is called every robot packet, no matter the mode. Use
@@ -99,6 +108,9 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
+
+    //Drive_Train
+    driveFront.arcadeDrive(_Joystick.getY(), _Joystick.getX());
   }
 
   /**
