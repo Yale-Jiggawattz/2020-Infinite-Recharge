@@ -51,12 +51,25 @@ public class Robot extends TimedRobot {
   //down climb motor---------------------------------------------------------------------------------------------------------------
   
   private VictorSPX _downbClimbMotor = new VictorSPX(6);
+
+  //Buttons/Integers----------------------------------------------------------------------------------------------------------------
+
+  private Integer _manLiftUp = 11;
+  private Integer _manLiftDown = 12;
   
   //Gyro--------------------------------------------------------
 
   private Gyro _gyro;
 
+  //Digital Switches--------------------------------------------------------------------------------------------------------------------
 
+  private DigitalInput _bottomSwitch = new DigitalInput(1);
+  private DigitalInput _topSwitch = new DigitalInput(2);
+
+  //Toggle--------------------------------------------------------------------------------------------------------------------------------------
+
+  private Toggle _upClimbTog = new Toggle();
+  private Toggle _downClimbTog = new Toggle();
 
 
 
@@ -142,6 +155,22 @@ public class Robot extends TimedRobot {
 
     //Drive_Train
     driveFront.arcadeDrive(_joystick.getY(), _joystick.getX());
+
+  if(_upClimbTog.toggleHeld(_joystick, _manLiftUp) && _topSwitch.get()){
+
+    _upClimbMotor.set(ControlMode.PercentOutput, 0.5);
+
+  }else{
+    _upClimbMotor.set(ControlMode.PercentOutput, 0);
+  }
+  if(_downbClimbMotor.toggleHeld(_joystick, _manLiftDown) && _bottomSwitch.get()){
+
+    _downbClimbMotor.set(ControlMode.PercentOutput, -0.5);
+
+  }else{
+    _downbClimbMotor.set(ControlMode.PercentOutput, 0);
+  }
+
   }
 
   /**
