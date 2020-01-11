@@ -66,6 +66,19 @@ public class Robot extends TimedRobot {
   private DigitalInput _bottomSwitch = new DigitalInput(1);
   private DigitalInput _topSwitch = new DigitalInput(2);
 
+  //Pneumatics
+  private Compressor _compressor = new Compressor(0);
+  private DoubleSolenoid _tansSolnoid = new DoubleSolenoid(0, 1);
+
+  //Drive Joystick Button Values
+  private Integer _transSolnoidVal = 1;
+
+  //Toggles
+    //Pneumatics
+    private Toggle _transSolnoidTog = new Toggle();
+
+
+
   //Toggle--------------------------------------------------------------------------------------------------------------------------------------
 
   private Toggle _upClimbTog = new Toggle();
@@ -92,6 +105,12 @@ public class Robot extends TimedRobot {
 
     _backLeftMotor.follow(_frontLeftMotor); 
     _backRightMotor.follow(_frontRightMotor);
+
+    //Pneumatics
+    _compressor.enabled
+    _transSolnoid.set(Value.kReverse);
+
+    
 
   }
 
@@ -171,6 +190,13 @@ public class Robot extends TimedRobot {
     _downbClimbMotor.set(ControlMode.PercentOutput, 0);
   }
 
+    // Pneumatics Controls
+    if(_transSolnoidTog.togglePressed(_joystick, _transSolnoidVal)){
+      _transSolnoid.set(DoubleSolenoid.Value.kForward);
+  
+    }else{
+      _transSolnoid.set(DoubleSolenoid.Value.kReverse);
+    }
   }
 
   /**
