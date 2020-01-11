@@ -29,7 +29,8 @@ public class Robot extends TimedRobot {
   private String m_autoSelected;
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
 
-  //Drive Train
+  //Drive Train----------------------------------------------------------------------------------------------------------------------------
+  
   private WPI_TalonSRX _frontRightMotor = new WPI_TalonSRX(1);
   private WPI_TalonSRX _frontLeftMotor = new WPI_TalonSRX(3);
 
@@ -38,13 +39,16 @@ public class Robot extends TimedRobot {
 
   DifferentialDrive driveFront = new DifferentialDrive(_frontRightMotor, _frontLeftMotor);
 
- //Controls
-  private Joystick _joystick = new Joystick(0); 
+ //Controls-----------------------------------------------------------------------------------------------------------------------------
+  
+ private Joystick _joystick = new Joystick(0); 
 
-  //up climb motor
+  //up climb motor------------------------------------------------------------------------------------------------------------------
+ 
   private VictorSPX _upClimbMotor = new VictorSPX(5);
   
-  //down climb motor
+  //down climb motor---------------------------------------------------------------------------------------------------------------
+  
   private VictorSPX _downbClimbMotor = new VictorSPX(6);
 
 
@@ -60,9 +64,15 @@ public class Robot extends TimedRobot {
     m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
     m_chooser.addOption("My Auto", kCustomAuto);
     SmartDashboard.putData("Auto choices", m_chooser);
+    
+    //Slaves-------------------------------------------------------------------------------------------------------------
+
+    _backLeftMotor.follow(_frontLeftMotor); 
+    _backRightMotor.follow(_frontRightMotor);
+
   }
 
-  //Slaves
+  
 
   
   
