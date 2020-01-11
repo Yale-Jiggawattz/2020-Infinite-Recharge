@@ -30,17 +30,17 @@ public class Robot extends TimedRobot {
   private String m_autoSelected;
   private final SendableChooser<String> m_chooser = new SendableChooser<>(); 
 
- //ButtonsIntegers----------------------------------------------------------------------------------------------------------------
+  //ButtonsIntegers----------------------------------------------------------------------------------------------------------------
 
   private Integer _manLiftUp = 11;
   private Integer _manLiftDown = 12;
 
- //Toggle--------------------------------------------------------------------------------------------------------------------------------------
+  //Toggle--------------------------------------------------------------------------------------------------------------------------------------
 
   private Toggle _upClimbTog = new Toggle();
   private Toggle _downClimbTog = new Toggle();
 
-  //Drive Train----------------------------------------------------------------------------------------------------------------------------
+    //Drive Train----------------------------------------------------------------------------------------------------------------------------
   
   private WPI_TalonSRX _frontRightMotor = new WPI_TalonSRX(1);
   private WPI_TalonSRX _frontLeftMotor = new WPI_TalonSRX(3);
@@ -50,34 +50,34 @@ public class Robot extends TimedRobot {
 
   DifferentialDrive driveFront = new DifferentialDrive(_frontRightMotor, _frontLeftMotor);
 
- //Controls-----------------------------------------------------------------------------------------------------------------------------
+  //Controls-----------------------------------------------------------------------------------------------------------------------------
   
  private Joystick _joystick = new Joystick(0); 
 
-  //up climb motor------------------------------------------------------------------------------------------------------------------
+   //up climb motor------------------------------------------------------------------------------------------------------------------
  
   private VictorSPX _upClimbMotor = new VictorSPX(5);
   
-  //down climb motor---------------------------------------------------------------------------------------------------------------
+    //down climb motor---------------------------------------------------------------------------------------------------------------
   
   private VictorSPX _downbClimbMotor = new VictorSPX(6);
 
  
   
-  //Gyro--------------------------------------------------------
+    //Gyro--------------------------------------------------------
 
   private Gyro _gyro;
 
-  //Digital Switches--------------------------------------------------------------------------------------------------------------------
+    //Digital Switches--------------------------------------------------------------------------------------------------------------------
 
   private DigitalInput _bottomSwitch = new DigitalInput(1);
   private DigitalInput _topSwitch = new DigitalInput(2);
 
-  //Pneumatics
+    //Pneumatics
 
   private DoubleSolenoid _tansSolnoid = new DoubleSolenoid(0, 1);
 
-  //Drive Joystick Button Values
+    //Drive Joystick Button Values
   private Integer _transSolnoidVal = 1;
 
     //Pneumatics
