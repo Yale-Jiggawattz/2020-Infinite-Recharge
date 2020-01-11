@@ -7,11 +7,15 @@
 
 package frc.robot;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
+import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -30,59 +34,63 @@ public class Robot extends TimedRobot {
   private String m_autoSelected;
   private final SendableChooser<String> m_chooser = new SendableChooser<>(); 
 
-  //ButtonsIntegers----------------------------------------------------------------------------------------------------------------
+  //ButtonIntegers----------------------------------------------------------------------------------------------------------------
 
-  private Integer _manLiftUp = 11;
-  private Integer _manLiftDown = 12;
+    private Integer _liftUpInt = 11;
+    private Integer _liftDownInt = 12;
+    private Integer _liftUpStg2Int = 13;
+
+    private Integer _transSolenoidInt = 1;
 
   //Toggle--------------------------------------------------------------------------------------------------------------------------------------
 
-  private Toggle _upClimbTog = new Toggle();
-  private Toggle _downClimbTog = new Toggle();
+    private Toggle _upClimbTog = new Toggle();
+    private Toggle _downClimbTog = new Toggle();
+    private Toggle _upClimbTogStg2 = new Toggle();
 
-    //Drive Train----------------------------------------------------------------------------------------------------------------------------
+    private Toggle _transSolenoidTog = new Toggle();
+
+  //Drive Train----------------------------------------------------------------------------------------------------------------------------
   
-  private WPI_TalonSRX _frontRightMotor = new WPI_TalonSRX(1);
-  private WPI_TalonSRX _frontLeftMotor = new WPI_TalonSRX(3);
+    private WPI_TalonSRX _frontRightMotor = new WPI_TalonSRX(1);
+    private WPI_TalonSRX _frontLeftMotor = new WPI_TalonSRX(3);
 
-  private VictorSPX _backRightMotor = new VictorSPX(2);
-  private VictorSPX _backLeftMotor = new VictorSPX(4);
+    private VictorSPX _backRightMotor = new VictorSPX(2);
+    private VictorSPX _backLeftMotor = new VictorSPX(4);
 
-  DifferentialDrive driveFront = new DifferentialDrive(_frontRightMotor, _frontLeftMotor);
+    DifferentialDrive driveFront = new DifferentialDrive(_frontRightMotor, _frontLeftMotor);
 
   //Controls-----------------------------------------------------------------------------------------------------------------------------
   
- private Joystick _joystick = new Joystick(0); 
+    private Joystick _joystick = new Joystick(0); 
 
-   //up climb motor------------------------------------------------------------------------------------------------------------------
+  //up climb motor------------------------------------------------------------------------------------------------------------------
  
-  private VictorSPX _upClimbMotor = new VictorSPX(5);
+    private VictorSPX _upClimbMotor = new VictorSPX(5);
   
-    //down climb motor---------------------------------------------------------------------------------------------------------------
+  //down climb motor---------------------------------------------------------------------------------------------------------------
   
-  private VictorSPX _downbClimbMotor = new VictorSPX(6);
+    private VictorSPX _downClimbMotor = new VictorSPX(6);
 
  
   
-    //Gyro--------------------------------------------------------
+  //Gyro--------------------------------------------------------
 
-  private Gyro _gyro;
+    private Gyro _gyro;
 
-    //Digital Switches--------------------------------------------------------------------------------------------------------------------
+  //Digital Switches--------------------------------------------------------------------------------------------------------------------
 
-  private DigitalInput _bottomSwitch = new DigitalInput(1);
-  private DigitalInput _topSwitch = new DigitalInput(2);
+    private DigitalInput _bottomSwitch = new DigitalInput(1);
+    private DigitalInput _topSwitch = new DigitalInput(2);
+  
+  //Pneumatics------------------------------------------------------------------------------------------------------------------------------
 
-    //Pneumatics
+    private DoubleSolenoid _transSolenoid = new DoubleSolenoid(0, 1);
 
-  private DoubleSolenoid _tansSolnoid = new DoubleSolenoid(0, 1);
 
-    //Drive Joystick Button Values
-  private Integer _transSolnoidVal = 1;
+    
 
-    //Pneumatics
-
-    private Toggle _transSolnoidTog = new Toggle();
+  
 
  
 
@@ -99,18 +107,18 @@ public class Robot extends TimedRobot {
     m_chooser.addOption("My Auto", kCustomAuto);
     SmartDashboard.putData("Auto choices", m_chooser);
    
-    //gyro------------------------------------------------------------------------
+  //gyro------------------------------------------------------------------------
 
     _gyro.getAngle();
     
-    //Slaves-------------------------------------------------------------------------------------------------------------
+  //Slaves-------------------------------------------------------------------------------------------------------------
 
     _backLeftMotor.follow(_frontLeftMotor); 
     _backRightMotor.follow(_frontRightMotor);
 
-    //Pneumatics
-    _compressor.enabled
-    _transSolnoid.set(Value.kReverse);
+  //Pneumatics--------------------------------------------------------------------------------------------------------------------------------
+
+    _transSolenoid.set(Value.kReverse);
 
     
 
@@ -174,30 +182,43 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
 
-    //Drive_Train
+  //Drive_Train-----------------------------------------------------------------------------------------------------------------------
+
     driveFront.arcadeDrive(_joystick.getY(), _joystick.getX());
 
-  if(_upClimbTog.toggleHeld(_joystick, _manLiftUp) && _topSwitch.get()){
+  if(_upClimbTog.toggleHeld(_joystick, _liftUpInt) && _topSwitch.get()){
 
     _upClimbMotor.set(ControlMode.PercentOutput, 0.5);
-
+    
   }else{
+
     _upClimbMotor.set(ControlMode.PercentOutput, 0);
+
   }
-  if(_downbClimbMotor.toggleHeld(_joystick, _manLiftDown) && _bottomSwitch.get()){
-
-    _downbClimbMotor.set(ControlMode.PercentOutput, -0.5);
-
-  }else{
-    _downbClimbMotor.set(ControlMode.PercentOutput, 0);
-  }
-
-    // Pneumatics Controls
-    if(_transSolnoidTog.togglePressed(_joystick, _transSolnoidVal)){
-      _transSolnoid.set(DoubleSolenoid.Value.kForward);
   
-    }else{
-      _transSolnoid.set(DoubleSolenoid.Value.kReverse);
+  if(_downClimbTog.toggleHeld(_joystick, _liftDownInt) && _bottomSwitch.get()){
+
+    _downClimbMotor.set(ControlMode.PercentOutput, -0.5);
+
+  } else if(_upClimbTogStg2.toggleHeld(_joystick, _liftUpStg2Int) && _topSwitch.get()){
+
+    _downClimbMotor.set(ControlMode.PercentOutput, 0.5);
+  
+  }else{
+
+    _downClimbMotor.set(ControlMode.PercentOutput, 0);
+  
+  }
+
+  //Transmission--------------------------------------------------------------------------------------------------
+    
+  if(_transSolenoidTog.togglePressed(_joystick, _transSolenoidInt)){
+      _transSolenoid.set(DoubleSolenoid.Value.kForward);
+  
+  }else{
+
+      _transSolenoid.set(DoubleSolenoid.Value.kReverse);
+    
     }
   }
 
