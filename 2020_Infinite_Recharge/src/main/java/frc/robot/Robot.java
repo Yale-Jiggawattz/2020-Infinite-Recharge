@@ -56,6 +56,17 @@ public class Robot extends TimedRobot {
 
   private Gyro _gyro;
 
+  //Pneumatics
+  private Compressor _compressor = new Compressor(0);
+  private DoubleSolenoid _tansSolnoid = new DoubleSolenoid(0, 1);
+
+  //Drive Joystick Button Values
+  private Integer _transSolnoidVal = 1;
+
+  //Toggles
+    //Pneumatics
+    private Toggle _transSolnoidTog = new Toggle();
+
 
 
 
@@ -79,6 +90,12 @@ public class Robot extends TimedRobot {
 
     _backLeftMotor.follow(_frontLeftMotor); 
     _backRightMotor.follow(_frontRightMotor);
+
+    //Pneumatics
+    _compressor.enabled
+    _transSolnoid.set(Value.kReverse);
+
+    
 
   }
 
@@ -142,6 +159,14 @@ public class Robot extends TimedRobot {
 
     //Drive_Train
     driveFront.arcadeDrive(_joystick.getY(), _joystick.getX());
+
+    // Pneumatics Controlls
+    if(_transSolnoidTog.togglePressed(_joystick, _transSolnoidVal)){
+      _transSolnoid.set(DoubleSolenoid.Value.kForward);
+  
+    }else{
+      _transSolnoid.set(DoubleSolenoid.Value.kReverse);
+    }
   }
 
   /**
