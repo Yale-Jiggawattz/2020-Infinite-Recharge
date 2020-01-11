@@ -26,6 +26,17 @@ public class Robot extends TimedRobot {
   private String m_autoSelected;
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
 
+<<<<<<< HEAD
+=======
+  //up climb motor
+  private WPI_VictorSPX upClimbMotor = new WPI_TalonSRX();
+  
+  //down climb motor
+  private WPI_VictorSPX downbClimbMotor = new WPI_TalonSRX();
+
+  
+
+>>>>>>> Climber
 
   /**
    * This function is run when the robot is first started up and should be
