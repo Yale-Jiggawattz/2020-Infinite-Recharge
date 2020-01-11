@@ -7,6 +7,7 @@
 
 package frc.robot;
 
+import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 
@@ -33,8 +34,8 @@ public class Robot extends TimedRobot {
   private WPI_TalonSRX _frontRightMotor = new WPI_TalonSRX(1);
   private WPI_TalonSRX _frontLeftMotor = new WPI_TalonSRX(3);
 
-  private WPI_VictorSPX _backRightMotor = new WPI_VictorSPX(2);
-  private WPI_VictorSPX _backLeftMotor = new WPI_VictorSPX(4);
+  private VictorSPX _backRightMotor = new VictorSPX(2);
+  private VictorSPX _backLeftMotor = new VictorSPX(4);
 
   DifferentialDrive driveFront = new DifferentialDrive(_frontRightMotor, _frontLeftMotor);
 
@@ -42,12 +43,12 @@ public class Robot extends TimedRobot {
   private Joystick _joystick = new Joystick(0); 
 
   //up climb motor
-  private WPI_VictorSPX _upClimbMotor = new WPI_VictorSPX(5);
+  private VictorSPX _upClimbMotor = new VictorSPX(5);
   
   //down climb motor
-  private WPI_VictorSPX _downbClimbMotor = new WPI_VictorSPX(6);
+  private VictorSPX _downbClimbMotor = new VictorSPX(6);
 
-  
+
 
 
   /**
