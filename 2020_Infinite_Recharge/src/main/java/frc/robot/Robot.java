@@ -38,7 +38,7 @@ public class Robot extends TimedRobot {
   private VictorSPX _backRightMotor = new VictorSPX(2);
   private VictorSPX _backLeftMotor = new VictorSPX(4);
 
-  DifferentialDrive driveFront = new DifferentialDrive(_frontRightMotor, _frontLeftMotor);
+  private DifferentialDrive _drive = new DifferentialDrive(_frontRightMotor, _frontLeftMotor);
 
  //Controls-----------------------------------------------------------------------------------------------------------------------------
   
@@ -52,9 +52,14 @@ public class Robot extends TimedRobot {
   
   private VictorSPX _downbClimbMotor = new VictorSPX(6);
   
-  //Gyro--------------------------------------------------------
+  //Auton--------------------------------------------------------
+  private centerAuton _centerAuton;
+  private leftAuton _leftAuton;
+  private rightAuton _rightAuton; 
 
   private Gyro _gyro;
+
+  
 
 
 
@@ -141,7 +146,7 @@ public class Robot extends TimedRobot {
   public void teleopPeriodic() {
 
     //Drive_Train
-    driveFront.arcadeDrive(_joystick.getY(), _joystick.getX());
+    _drive.arcadeDrive(_joystick.getY(), _joystick.getX());
   }
 
   /**
