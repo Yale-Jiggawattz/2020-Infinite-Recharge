@@ -8,8 +8,11 @@
 package frc.robot;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -26,36 +29,32 @@ public class Robot extends TimedRobot {
   private String m_autoSelected;
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
 
-<<<<<<< HEAD
-=======
+  //Drive Train
+  private WPI_TalonSRX _frontRightMotor = new WPI_TalonSRX(1);
+  private WPI_TalonSRX _frontLeftMotor = new WPI_TalonSRX(3);
+
+  private WPI_VictorSPX _backRightMotor = new WPI_VictorSPX(2);
+  private WPI_VictorSPX _backLeftMotor = new WPI_VictorSPX(4);
+
+  DifferentialDrive driveFront = new DifferentialDrive(_frontRightMotor, _frontLeftMotor);
+
+ //Controls
+  private Joystick _joystick = new Joystick(0); 
+
   //up climb motor
-  private WPI_VictorSPX upClimbMotor = new WPI_TalonSRX();
+  private WPI_VictorSPX _upClimbMotor = new WPI_VictorSPX(5);
   
   //down climb motor
-  private WPI_VictorSPX downbClimbMotor = new WPI_TalonSRX();
+  private WPI_VictorSPX _downbClimbMotor = new WPI_VictorSPX(6);
 
   
 
->>>>>>> Climber
 
   /**
    * This function is run when the robot is first started up and should be
    * used for any initialization code.
    */
-
-  //Drive Train
-   private WPI_TalonSRX _FrontRightMotor = new WPI_TalonSRX(1);
-   private WPI_TalonSRX _FrontLeftMotor = new WPI_TalonSRX(3);
-
-   private VictorSPX _BackRightMotor = new VictorSPX(2);
-   private VictorSPX _BackLeftMotor = new VictorSPX(4);
-
-   private DifferentialDrive driveFront = new DifferentialDrive(_FrontLeftMotor, _FrontRightMotor);
-
-  //Controls
-   private Joystick _Joystick = new Joystick(0);
-   
-   
+    
   @Override
   public void robotInit() {
     m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
@@ -65,8 +64,9 @@ public class Robot extends TimedRobot {
 
   //Slaves
 
-  _BackLeftMotor.follow(_FrontLeftMotor);
-  _BackRightMotor.follow(_FrontRightMotor);
+  
+  
+  
 
   /**
    * This function is called every robot packet, no matter the mode. Use
@@ -121,7 +121,7 @@ public class Robot extends TimedRobot {
   public void teleopPeriodic() {
 
     //Drive_Train
-    driveFront.arcadeDrive(_Joystick.getY(), _Joystick.getX());
+    driveFront.arcadeDrive(_joystick.getY(), _joystick.getX());
   }
 
   /**
