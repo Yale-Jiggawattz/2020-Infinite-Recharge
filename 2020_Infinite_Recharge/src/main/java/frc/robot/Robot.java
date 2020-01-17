@@ -42,22 +42,24 @@ public class Robot extends TimedRobot {
 
   //Controls-----------------------------------------------------------------------------------------------------------------------------
   
- private Joystick _joystick = new Joystick(0); 
+  private Joystick _joystick = new Joystick(0); 
 
   //up climb motor------------------------------------------------------------------------------------------------------------------
  
-  private VictorSPX _upClimbMotor = new VictorSPX(5);
+  private VictorSPX _upClimbMotor = new VictorSPX(5); //60%
   
   //down climb motor---------------------------------------------------------------------------------------------------------------
   
-  private VictorSPX _downbClimbMotor = new VictorSPX(6);
+  private VictorSPX _downbClimbMotor = new VictorSPX(6); //50%
   
-  //Auton--------------------------------------------------------
+  //Auton--------------------------------------------------------------------------------------------------------------------
   private centerAuton _centerAuton;
   private leftAuton _leftAuton;
   private rightAuton _rightAuton; 
 
   private Gyro _gyro;
+
+
 
   
 
