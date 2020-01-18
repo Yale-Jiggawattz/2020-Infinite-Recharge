@@ -11,8 +11,11 @@ import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.Sendable;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -59,6 +62,11 @@ public class Robot extends TimedRobot {
 
   private Gyro _gyro;
 
+  private Timer _timer = new Timer();
+
+  
+
+  
 
 
   
@@ -80,7 +88,8 @@ public class Robot extends TimedRobot {
    
     //gyro------------------------------------------------------------------------
 
-    _gyro.getAngle();
+    Shuffleboard.getTab("Gyro Tab").add((Sendable) _gyro);
+    
     
     //Slaves-------------------------------------------------------------------------------------------------------------
 
@@ -123,6 +132,12 @@ public class Robot extends TimedRobot {
     m_autoSelected = m_chooser.getSelected();
     // m_autoSelected = SmartDashboard.getString("Auto Selector", kDefaultAuto);
     System.out.println("Auto selected: " + m_autoSelected);
+
+    _timer.reset();
+    _timer.start();
+
+    _gyro.getAngle();
+    
   }
 
   /**
@@ -132,7 +147,16 @@ public class Robot extends TimedRobot {
   public void autonomousPeriodic() {
     switch (m_autoSelected) {
       case kCustomAuto:
-        // Put custom auto code here
+
+      if (_timer.get() < 2.0){
+
+        _drive.arcadeDrive(.5, 0);
+      
+      }else if (_timer.get() < 5.0){
+
+        
+      }
+
         break;
       case kDefaultAuto:
       default:
