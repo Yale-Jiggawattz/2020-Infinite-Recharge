@@ -152,12 +152,13 @@ public class Robot extends TimedRobot {
 
         _drive.arcadeDrive(.5, 0);
       
-      }else if (_timer.get() < 5.0){
+      }else{
 
+        _drive.arcadeDrive(0, 0);
         
       }
-
         break;
+        
       case kDefaultAuto:
       default:
         // Put default auto code here
