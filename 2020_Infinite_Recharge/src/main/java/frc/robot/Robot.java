@@ -186,6 +186,8 @@ public class Robot extends TimedRobot {
 
     driveFront.arcadeDrive(_joystick.getY(), _joystick.getX());
 
+  //Climber----------------------------------------------------------------------------------------------
+
   if(_upClimbTog.toggleHeld(_joystick, _liftUpInt) && _topSwitch.get()){
 
     _upClimbMotor.set(ControlMode.PercentOutput, 0.5);
