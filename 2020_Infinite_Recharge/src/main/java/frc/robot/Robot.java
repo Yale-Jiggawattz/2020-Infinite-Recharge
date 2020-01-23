@@ -30,6 +30,28 @@ public class Robot extends TimedRobot {
   private String m_autoSelected;
   private final SendableChooser<String> m_chooser = new SendableChooser<>(); 
 
+  //Integers-------------------------------------------------------------------------------------------------------------------------------
+    //--Launcher--//
+  private Integer _inttakeInt = 1;
+  private Integer _outtakeInt = 2;
+  private Integer _reverseInt = 9;
+
+    //--Climber--//
+
+  //Buttons--------------------------------------------------------------------------------------------------------------------------------
+  private Toggle _inttakeButton = new Toggle();
+  private Toggle _OuttakeButton = new Toggle();
+  private Toggle _reverseButton = new Toggle();
+
+  //Launcher-------------------------------------------------------------------------------------------------------------------------------
+
+  private WPI_VictorSPX _intakeMotor = new WPI_VictorSPX(7);
+
+  private WPI_VictorSPX _beltMotor = new WPI_VictorSPX(8);
+
+  private WPI_VictorSPX _leftOuttakeMotor = new WPI_VictorSPX(9);
+  private WPI_VictorSPX _rightOuttakeMotor = new WPI_VictorSPX(10);
+
   //Drive Train----------------------------------------------------------------------------------------------------------------------------
   
   private WPI_TalonSRX _frontRightMotor = new WPI_TalonSRX(1);
@@ -138,12 +160,32 @@ public class Robot extends TimedRobot {
    * This function is called periodically during operator control.
    */
   @Override
-  public void teleopPeriodic() {
+  public void teleopPeriodic() {{
 
     //Drive_Train
     driveFront.arcadeDrive(_joystick.getY(), _joystick.getX());
   }
-
+    //Launcher
+    if(_intakeButton.toggleHeld(_joystick, 1)){
+      _intakeMotor.set(.5);
+      _beltMotor.set(.5);
+    }
+    else if(_outtakeButton.toggleHeld(_joystick, 2)){
+      _leftOuttakeMotor.set(1);
+      _rightOuttakeMotor.set(1);
+      _beltMotor.set(.5);
+    }
+    else if(_reverseButton.toggleHeld(_joystick, 9)){
+      _beltMotor.set(-.5);
+      _intakeMotor.set(-1);
+    }
+    else{
+      _leftOuttakeMotor.set(0);
+      _rightOuttakeMotor.set(0);
+      _beltMotor.set(0);
+      _intakeMotor.set(0);
+    }
+  }
   /**
    * This function is called periodically during test mode.
    */
