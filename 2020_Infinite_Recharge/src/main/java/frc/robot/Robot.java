@@ -7,8 +7,6 @@
 
 package frc.robot;
 
-import java.util.Timer;
-
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
@@ -18,7 +16,7 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Sendable;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.Timer; 
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -39,7 +37,7 @@ public class Robot extends TimedRobot {
   private String m_autoSelected;
   private final SendableChooser<String> m_chooser = new SendableChooser<>(); 
 
-//ButtonIntegers----------------------------------------------------------------------------------------------------------------
+//Button Values----------------------------------------------------------------------------------------------------------------
 
   private Integer _liftUpInt = 11;
   private Integer _liftDownInt = 12;
@@ -82,18 +80,16 @@ public class Robot extends TimedRobot {
 //Climb------------------------------------------------------------------------------------------------------------------
  
   private VictorSPX _upClimbMotor = new VictorSPX(5); //60%  
-  private VictorSPX _downbClimbMotor = new VictorSPX(6); //50%
+  private VictorSPX _downClimbMotor = new VictorSPX(6); //50%
 
   private DigitalInput _bottomSwitch = new DigitalInput(1);
   private DigitalInput _topSwitch = new DigitalInput(2);
   
 //Auton--------------------------------------------------------------------------------------------------------------------
-  
-  private centerAuton _centerAuton;
-  private leftAuton _leftAuton;
-  private rightAuton _rightAuton; 
 
   private Gyro _gyro;
+  double kP = 1; 
+  double heading; 
 
   private Timer _autonTimer = new Timer();
   
@@ -159,8 +155,8 @@ public class Robot extends TimedRobot {
     // m_autoSelected = SmartDashboard.getString("Auto Selector", kDefaultAuto);
     System.out.println("Auto selected: " + m_autoSelected);
 
-    _timer.reset();
-    _timer.start();
+    _autonTimer.start();
+    _autonTimer.reset();
 
     _gyro.getAngle();
     
@@ -174,9 +170,10 @@ public class Robot extends TimedRobot {
     switch (m_autoSelected) {
       case kCustomAuto:
 
-      if (_timer.get() < 2.0){
+      if (_autonTimer.get() < 15.0){
 
         _drive.arcadeDrive(.5, 0);
+
       
       }else{
 
@@ -188,9 +185,9 @@ public class Robot extends TimedRobot {
       case kDefaultAuto:
       default:
       
-      if (_timer.get() < 2.0){
+      if (_autonTimer.get() < 15.0){
 
-        _drive.arcadeDrive(.5, 0);
+        _drive.tankDrive(.5 + kP * heading - _gyro.getAngle(), .5 - kP * heading - _gyro.getAngle());
       
       }else{
 
@@ -209,7 +206,7 @@ public class Robot extends TimedRobot {
 
   //Drive_Train-----------------------------------------------------------------------------------------------------------------------
 
-    driveFront.arcadeDrive(_joystick.getY(), _joystick.getX());
+    _drive.arcadeDrive(_joystick.getY(), _joystick.getX());
 
   if(_upClimbTog.toggleHeld(_joystick, _liftUpInt) && _topSwitch.get()){
 
