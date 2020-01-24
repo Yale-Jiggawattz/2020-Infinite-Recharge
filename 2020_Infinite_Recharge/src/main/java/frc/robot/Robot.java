@@ -9,12 +9,19 @@ package frc.robot;
 
 import java.util.Timer;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
+import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.Sendable;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -32,7 +39,23 @@ public class Robot extends TimedRobot {
   private String m_autoSelected;
   private final SendableChooser<String> m_chooser = new SendableChooser<>(); 
 
-  //Drive Train----------------------------------------------------------------------------------------------------------------------------
+//ButtonIntegers----------------------------------------------------------------------------------------------------------------
+
+  private Integer _liftUpInt = 11;
+  private Integer _liftDownInt = 12;
+  private Integer _liftUpStg2Int = 13;
+
+  private Integer _transSolenoidInt = 1;
+
+//Toggle--------------------------------------------------------------------------------------------------------------------------------------
+
+  private Toggle _upClimbTog = new Toggle();
+  private Toggle _downClimbTog = new Toggle();
+  private Toggle _upClimbTogStg2 = new Toggle();
+
+  private Toggle _transSolenoidTog = new Toggle();
+
+//Drive Train----------------------------------------------------------------------------------------------------------------------------
   
   private WPI_TalonSRX _frontRightMotor = new WPI_TalonSRX(1);
   private WPI_TalonSRX _frontLeftMotor = new WPI_TalonSRX(3);
@@ -42,19 +65,20 @@ public class Robot extends TimedRobot {
 
   private DifferentialDrive _drive = new DifferentialDrive(_frontRightMotor, _frontLeftMotor);
 
-  //Controls-----------------------------------------------------------------------------------------------------------------------------
+//Controls-----------------------------------------------------------------------------------------------------------------------------
   
- private Joystick _joystick = new Joystick(0); 
+  private Joystick _joystick = new Joystick(0); 
 
-  //up climb motor------------------------------------------------------------------------------------------------------------------
+//Climb------------------------------------------------------------------------------------------------------------------
  
-  private VictorSPX _upClimbMotor = new VictorSPX(5);
+  private VictorSPX _upClimbMotor = new VictorSPX(5); //60%  
+  private VictorSPX _downbClimbMotor = new VictorSPX(6); //50%
+
+  private DigitalInput _bottomSwitch = new DigitalInput(1);
+  private DigitalInput _topSwitch = new DigitalInput(2);
   
-  //down climb motor---------------------------------------------------------------------------------------------------------------
+//Auton--------------------------------------------------------------------------------------------------------------------
   
-  private VictorSPX _downbClimbMotor = new VictorSPX(6);
-  
-  //Auton--------------------------------------------------------
   private centerAuton _centerAuton;
   private leftAuton _leftAuton;
   private rightAuton _rightAuton; 
@@ -63,11 +87,9 @@ public class Robot extends TimedRobot {
 
   private Timer _autonTimer = new Timer();
   
-  
+//Pneumatics------------------------------------------------------------------------------------------------------------------------------
 
-
-
-
+  private DoubleSolenoid _transSolenoid = new DoubleSolenoid(0, 1);
 
   /**
    * This function is run when the robot is first started up and should be
@@ -80,22 +102,23 @@ public class Robot extends TimedRobot {
     m_chooser.addOption("My Auto", kCustomAuto);
     SmartDashboard.putData("Auto choices", m_chooser);
    
-    //gyro------------------------------------------------------------------------
+//gyro------------------------------------------------------------------------
 
-    _gyro.getAngle();
+    Shuffleboard.getTab("Gyro Tab").add((Sendable) _gyro);
     
-    //Slaves-------------------------------------------------------------------------------------------------------------
+    
+//Slaves-------------------------------------------------------------------------------------------------------------
 
     _backLeftMotor.follow(_frontLeftMotor); 
     _backRightMotor.follow(_frontRightMotor);
 
+//Pneumatics--------------------------------------------------------------------------------------------------------------------------------
+
+    _transSolenoid.set(Value.kReverse);
+
+    
+
   }
-
-  
-
-  
-  
-  
 
   /**
    * This function is called every robot packet, no matter the mode. Use
@@ -125,6 +148,12 @@ public class Robot extends TimedRobot {
     m_autoSelected = m_chooser.getSelected();
     // m_autoSelected = SmartDashboard.getString("Auto Selector", kDefaultAuto);
     System.out.println("Auto selected: " + m_autoSelected);
+
+    _timer.reset();
+    _timer.start();
+
+    _gyro.getAngle();
+    
   }
 
   /**
@@ -134,13 +163,30 @@ public class Robot extends TimedRobot {
   public void autonomousPeriodic() {
     switch (m_autoSelected) {
       case kCustomAuto:
-        if (_autonTimer.get() < 2.0){
-          _drive.arcadeDrive(0.5, 0.0);
-        }
+
+      if (_timer.get() < 2.0){
+
+        _drive.arcadeDrive(.5, 0);
+      
+      }else{
+
+        _drive.arcadeDrive(0, 0);
+        
+      }
         break;
+        
       case kDefaultAuto:
       default:
-        // Put default auto code here
+      
+      if (_timer.get() < 2.0){
+
+        _drive.arcadeDrive(.5, 0);
+      
+      }else{
+
+        _drive.arcadeDrive(0, 0);
+        
+      }
         break;
     }
   }
@@ -151,8 +197,44 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
 
-    //Drive_Train
-    _drive.arcadeDrive(_joystick.getY(), _joystick.getX());
+  //Drive_Train-----------------------------------------------------------------------------------------------------------------------
+
+    driveFront.arcadeDrive(_joystick.getY(), _joystick.getX());
+
+  if(_upClimbTog.toggleHeld(_joystick, _liftUpInt) && _topSwitch.get()){
+
+    _upClimbMotor.set(ControlMode.PercentOutput, 0.5);
+    
+  }else{
+
+    _upClimbMotor.set(ControlMode.PercentOutput, 0);
+
+  }
+  
+  if(_downClimbTog.toggleHeld(_joystick, _liftDownInt) && _bottomSwitch.get()){
+
+    _downClimbMotor.set(ControlMode.PercentOutput, -0.5);
+
+  } else if(_upClimbTogStg2.toggleHeld(_joystick, _liftUpStg2Int) && _topSwitch.get()){
+
+    _downClimbMotor.set(ControlMode.PercentOutput, 0.5);
+  
+  }else{
+
+    _downClimbMotor.set(ControlMode.PercentOutput, 0);
+  
+  }
+
+  //Transmission--------------------------------------------------------------------------------------------------
+    
+  if(_transSolenoidTog.togglePressed(_joystick, _transSolenoidInt)){
+      _transSolenoid.set(DoubleSolenoid.Value.kForward);
+  
+  }else{
+
+      _transSolenoid.set(DoubleSolenoid.Value.kReverse);
+    
+    }
   }
 
   /**
