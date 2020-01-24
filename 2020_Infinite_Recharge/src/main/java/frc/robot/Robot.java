@@ -9,6 +9,7 @@ package frc.robot;
 
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -32,15 +33,15 @@ public class Robot extends TimedRobot {
 
   //Integers-------------------------------------------------------------------------------------------------------------------------------
     //--Launcher--//
-  private Integer _inttakeInt = 1;
+  private Integer _intakeInt = 1;
   private Integer _outtakeInt = 2;
   private Integer _reverseInt = 9;
 
     //--Climber--//
 
   //Buttons--------------------------------------------------------------------------------------------------------------------------------
-  private Toggle _inttakeButton = new Toggle();
-  private Toggle _OuttakeButton = new Toggle();
+  private Toggle _intakeButton = new Toggle();
+  private Toggle _outtakeButton = new Toggle();
   private Toggle _reverseButton = new Toggle();
 
   //Launcher-------------------------------------------------------------------------------------------------------------------------------
@@ -51,7 +52,7 @@ public class Robot extends TimedRobot {
 
   private WPI_VictorSPX _leftOuttakeMotor = new WPI_VictorSPX(9);
   private WPI_VictorSPX _rightOuttakeMotor = new WPI_VictorSPX(10);
-
+  
   //Drive Train----------------------------------------------------------------------------------------------------------------------------
   
   private WPI_TalonSRX _frontRightMotor = new WPI_TalonSRX(1);
