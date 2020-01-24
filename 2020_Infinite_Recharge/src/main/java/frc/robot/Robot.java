@@ -7,6 +7,8 @@
 
 package frc.robot;
 
+import java.util.Timer;
+
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
@@ -59,6 +61,8 @@ public class Robot extends TimedRobot {
 
   private Gyro _gyro;
 
+  private Timer _autonTimer = new Timer();
+  
   
 
 
@@ -130,7 +134,9 @@ public class Robot extends TimedRobot {
   public void autonomousPeriodic() {
     switch (m_autoSelected) {
       case kCustomAuto:
-        // Put custom auto code here
+        if (_autonTimer.get() < 2.0){
+          _drive.arcadeDrive(0.5, 0.0);
+        }
         break;
       case kDefaultAuto:
       default:
