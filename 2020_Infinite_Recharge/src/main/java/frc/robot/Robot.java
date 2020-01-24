@@ -47,6 +47,16 @@ public class Robot extends TimedRobot {
 
   private Integer _transSolenoidInt = 1;
 
+//Encoder Values--------------------------------------------------------------------------------------------------------------------------
+
+  private Integer _centerAutoSTG1 = 500;
+
+  private Integer _leftAutoSTG1 = 500;
+  private Integer _leftAutoSTG2 = 1000;
+
+  private Integer _rightAutoSTG1 = 500;
+  private Integer _rightAutoSTG2 = 1000;
+
 //Toggle--------------------------------------------------------------------------------------------------------------------------------------
 
   private Toggle _upClimbTog = new Toggle();
