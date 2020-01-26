@@ -12,8 +12,8 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.interfaces.Gyro;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -53,6 +53,8 @@ public class Robot extends TimedRobot {
   private WPI_VictorSPX _leftOuttakeMotor = new WPI_VictorSPX(9);
   private WPI_VictorSPX _rightOuttakeMotor = new WPI_VictorSPX(10);
   
+  private Servo _launcherServo = new Servo(1); 
+
   //Drive Train----------------------------------------------------------------------------------------------------------------------------
   
   private WPI_TalonSRX _frontRightMotor = new WPI_TalonSRX(1);
@@ -67,17 +69,11 @@ public class Robot extends TimedRobot {
   
  private Joystick _joystick = new Joystick(0); 
 
-  //up climb motor------------------------------------------------------------------------------------------------------------------
+ //climb  ------------------------------------------------------------------------------------------------------------------
  
   private VictorSPX _upClimbMotor = new VictorSPX(5);
-  
-  //down climb motor---------------------------------------------------------------------------------------------------------------
-  
   private VictorSPX _downbClimbMotor = new VictorSPX(6);
   
-  //Gyro--------------------------------------------------------
-
-  private Gyro _gyro;
 
 
 
@@ -94,9 +90,6 @@ public class Robot extends TimedRobot {
     m_chooser.addOption("My Auto", kCustomAuto);
     SmartDashboard.putData("Auto choices", m_chooser);
    
-    //gyro------------------------------------------------------------------------
-
-    _gyro.getAngle();
     
     //Slaves-------------------------------------------------------------------------------------------------------------
 
@@ -175,6 +168,7 @@ public class Robot extends TimedRobot {
       _leftOuttakeMotor.set(1);
       _rightOuttakeMotor.set(1);
       _beltMotor.set(.5);
+      _launcherServo.set(.5);
     }
     else if(_reverseButton.toggleHeld(_joystick, 9)){
       _beltMotor.set(-.5);
