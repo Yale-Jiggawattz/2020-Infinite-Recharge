@@ -10,13 +10,14 @@ package frc.robot;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
-import edu.wpi.first.wpilibj.interfaces.Gyro;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -38,17 +39,23 @@ public class Robot extends TimedRobot {
 
     private Integer _liftUpInt = 11;
     private Integer _liftDownInt = 12;
-    private Integer _liftUpStg2Int = 13;
 
     private Integer _transSolenoidInt = 1;
+
+    private Integer _intakeInt = 1;
+    private Integer _outtakeInt = 2;
+    private Integer _reverseInt = 9;
 
   //Toggle--------------------------------------------------------------------------------------------------------------------------------------
 
     private Toggle _upClimbTog = new Toggle();
     private Toggle _downClimbTog = new Toggle();
-    private Toggle _upClimbTogStg2 = new Toggle();
 
     private Toggle _transSolenoidTog = new Toggle();
+
+    private Toggle _intakeTog = new Toggle();
+    private Toggle _outtakeTog = new Toggle();
+    private Toggle _reverseTog = new Toggle();
 
   //Drive Train----------------------------------------------------------------------------------------------------------------------------
   
@@ -63,21 +70,7 @@ public class Robot extends TimedRobot {
   //Controls-----------------------------------------------------------------------------------------------------------------------------
   
     private Joystick _joystick = new Joystick(0); 
-
-  //up climb motor------------------------------------------------------------------------------------------------------------------
  
-    private VictorSPX _upClimbMotor = new VictorSPX(5);
-  
-  //down climb motor---------------------------------------------------------------------------------------------------------------
-  
-    private VictorSPX _downClimbMotor = new VictorSPX(6);
-
- 
-  
-  //Gyro--------------------------------------------------------
-
-    private Gyro _gyro;
-
   //Digital Switches--------------------------------------------------------------------------------------------------------------------
 
     private DigitalInput _bottomSwitch = new DigitalInput(1);
@@ -88,7 +81,22 @@ public class Robot extends TimedRobot {
     private DoubleSolenoid _transSolenoid = new DoubleSolenoid(0, 1);
 
 
-    
+  //climb-------------------------------------------------------------
+   
+  private VictorSPX _upClimbMotor = new VictorSPX(5);
+  private VictorSPX _downClimbMotor = new VictorSPX(6);
+
+  //Launcher-------------------------------------------------------------------------------------------------------------------------------
+
+  private WPI_VictorSPX _intakeMotor = new WPI_VictorSPX(7);
+
+  private WPI_VictorSPX _beltMotor = new WPI_VictorSPX(8);
+
+  private WPI_VictorSPX _leftOuttakeMotor = new WPI_VictorSPX(9);
+  private WPI_VictorSPX _rightOuttakeMotor = new WPI_VictorSPX(10);
+  
+  private Servo _launcherServo = new Servo(1); 
+  
 
   
 
@@ -107,9 +115,6 @@ public class Robot extends TimedRobot {
     m_chooser.addOption("My Auto", kCustomAuto);
     SmartDashboard.putData("Auto choices", m_chooser);
    
-  //gyro------------------------------------------------------------------------
-
-    _gyro.getAngle();
     
   //Slaves-------------------------------------------------------------------------------------------------------------
 
@@ -119,6 +124,10 @@ public class Robot extends TimedRobot {
   //Pneumatics--------------------------------------------------------------------------------------------------------------------------------
 
     _transSolenoid.set(Value.kReverse);
+
+  //Launch Servo
+    
+    _launcherServo.set(0);
 
     
 
@@ -180,7 +189,7 @@ public class Robot extends TimedRobot {
    * This function is called periodically during operator control.
    */
   @Override
-  public void teleopPeriodic() {
+  public void teleopPeriodic() {{
 
   //Drive_Train-----------------------------------------------------------------------------------------------------------------------
 
@@ -192,20 +201,11 @@ public class Robot extends TimedRobot {
 
     _upClimbMotor.set(ControlMode.PercentOutput, 0.5);
     
-  }else{
-
-    _upClimbMotor.set(ControlMode.PercentOutput, 0);
-
-  }
-  
-  if(_downClimbTog.toggleHeld(_joystick, _liftDownInt) && _bottomSwitch.get()){
+  }else if(_downClimbTog.toggleHeld(_joystick, _liftDownInt) && _bottomSwitch.get()){
 
     _downClimbMotor.set(ControlMode.PercentOutput, -0.5);
+    _upClimbMotor.set(ControlMode.PercentOutput, -0.5);
 
-  } else if(_upClimbTogStg2.toggleHeld(_joystick, _liftUpStg2Int) && _topSwitch.get()){
-
-    _downClimbMotor.set(ControlMode.PercentOutput, 0.5);
-  
   }else{
 
     _downClimbMotor.set(ControlMode.PercentOutput, 0);
@@ -223,7 +223,33 @@ public class Robot extends TimedRobot {
     
     }
   }
-
+    //Launcher
+    if(_intakeTog.toggleHeld(_joystick, _intakeInt)){
+      
+      _intakeMotor.set(.5);
+      _beltMotor.set(.5);
+    }
+    else if(_outtakeTog.toggleHeld(_joystick, _outtakeInt)){
+      
+      _leftOuttakeMotor.set(1);
+      _rightOuttakeMotor.set(1);
+      _beltMotor.set(.5);
+      _launcherServo.set(.5);
+    }
+    else if(_reverseTog.toggleHeld(_joystick, _reverseInt)){
+      
+      _beltMotor.set(-.5);
+      _intakeMotor.set(-1);
+    }
+    else{
+      
+      _leftOuttakeMotor.set(0);
+      _rightOuttakeMotor.set(0);
+      _beltMotor.set(0);
+      _intakeMotor.set(0);
+      _launcherServo.set(0);
+    }
+  }
   /**
    * This function is called periodically during test mode.
    */
@@ -231,3 +257,11 @@ public class Robot extends TimedRobot {
   public void testPeriodic() {
   }
 }
+
+
+//The Yale Jiggawattz FRC 6344
+// Nathan Hartway
+//
+//
+//
+//
