@@ -7,6 +7,8 @@
 
 package frc.robot;
 
+import com.kauailabs.navx.frc.AHRS;
+
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
@@ -87,7 +89,7 @@ public class Robot extends TimedRobot {
   
 //Auton--------------------------------------------------------------------------------------------------------------------
 
-  private Gyro _gyro;
+  AHRS _gyro;
   double kP = 1; 
   double heading; 
 
