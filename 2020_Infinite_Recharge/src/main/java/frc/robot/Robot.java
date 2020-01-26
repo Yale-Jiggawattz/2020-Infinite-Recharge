@@ -39,8 +39,8 @@ public class Robot extends TimedRobot {
   private final SendableChooser<String> m_chooser = new SendableChooser<>(); 
 
 //Might add Auton time values - Nate
-//Might change down climg to pull up and up climb to reach
-//
+//Might change down climg to pull up and up climb to reach -Nate
+//Have everybody add name -Nate
 
 //Button Values----------------------------------------------------------------------------------------------------------------
 
