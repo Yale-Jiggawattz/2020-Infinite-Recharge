@@ -40,18 +40,17 @@ public class Robot extends TimedRobot {
 
 //Might add Auton time values - Nate
 //Might change down climg to pull up and up climb to reach -Nate
-//Have everybody add name -Nate
 
 //Button Values----------------------------------------------------------------------------------------------------------------
 
-  private Integer _transSolenoidInt = 1;
+  private Integer _transSolenoidInt = 2;
 
   private Integer _upClimbInt = 11;
   private Integer _downClimbInt = 12;
 
-  private Integer _intakeInt = 1;
-  private Integer _launchInt = 2;
-  private Integer _reverseInt = 9;
+  private Integer _intakeInt = 3;
+  private Integer _launchInt = 1;
+  private Integer _reverseInt = 5;
 
 //Encoder Values--------------------------------------------------------------------------------------------------------------------------
 
@@ -62,6 +61,22 @@ public class Robot extends TimedRobot {
 
   private Integer _rightAutoSTG1 = 500;
   private Integer _rightAutoSTG2 = 1000;
+
+//Motor Speeds
+
+  private Double _upClimbMotorSTG1 = 0.5;
+  private Double _upClimbMotorSTG2 = -0.5; 
+  private Double _downClimbMotorSTG1 = -0.5; 
+
+  private Double _launcherSpeed = 1.0;
+  private Double _intakeSpeed = 0.5; 
+  private Double _intakeRevSpeed = -0.5;
+  private Double _beltSpeed = 0.5;
+  private Double _beltRevSpeed = -0.5;
+
+//Servo position
+
+  private Double _servoLaunchPos = 0.5; 
 
 //Toggle--------------------------------------------------------------------------------------------------------------------------------------
   
@@ -92,8 +107,6 @@ public class Robot extends TimedRobot {
 
   private DoubleSolenoid _transSolenoid = new DoubleSolenoid(0, 1);
 
-
-
 //Launcher-------------------------------------------------------------------------------------------------------------------------------
 
   private WPI_VictorSPX _intakeMotor = new WPI_VictorSPX(8);
@@ -107,8 +120,8 @@ public class Robot extends TimedRobot {
   
 //Climb------------------------------------------------------------------------------------------------------------------
  
-  private VictorSPX _upClimbMotor = new VictorSPX(7); //60%  
-  private VictorSPX _downClimbMotor = new VictorSPX(10); //50%
+  private VictorSPX _upClimbMotor = new VictorSPX(7); 
+  private VictorSPX _downClimbMotor = new VictorSPX(10); 
 
   private DigitalInput _bottomSwitch = new DigitalInput(1);
   private DigitalInput _topSwitch = new DigitalInput(2);
@@ -131,7 +144,6 @@ public class Robot extends TimedRobot {
     m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
     m_chooser.addOption("My Auto", kCustomAuto);
     SmartDashboard.putData("Auto choices", m_chooser);
-   
     
 //Slaves-------------------------------------------------------------------------------------------------------------
 
@@ -145,8 +157,6 @@ public class Robot extends TimedRobot {
   //Launch Servo
     
     _launcherServo.set(0);
-
-    
 
   }
 
@@ -236,12 +246,12 @@ public class Robot extends TimedRobot {
 
     if(_upClimbTog.toggleHeld(_joystick, _upClimbInt) && _topSwitch.get()){
 
-    _upClimbMotor.set(ControlMode.PercentOutput, 0.5);
+    _upClimbMotor.set(ControlMode.PercentOutput, _upClimbMotorSTG1);
     
   }else if(_downClimbTog.toggleHeld(_joystick, _downClimbInt) && _bottomSwitch.get()){
 
-    _downClimbMotor.set(ControlMode.PercentOutput, -0.5);
-    _upClimbMotor.set(ControlMode.PercentOutput, -0.5);
+    _downClimbMotor.set(ControlMode.PercentOutput, _downClimbMotorSTG1);
+    _upClimbMotor.set(ControlMode.PercentOutput, _upClimbMotorSTG2);
 
   }else{
 
@@ -265,20 +275,20 @@ public class Robot extends TimedRobot {
     
     if(_intakeTog.toggleHeld(_joystick, _intakeInt)){
       
-      _intakeMotor.set(.5);
-      _beltMotor.set(.5);
+      _intakeMotor.set(_intakeSpeed);
+      _beltMotor.set(_beltSpeed);
     }
     else if(_launchTog.toggleHeld(_joystick, _launchInt)){
       
-      _leftLaunchMotor.set(1);
-      _rightLaunchMotor.set(1);
-      _beltMotor.set(.5);
-      _launcherServo.set(.5);
+      _leftLaunchMotor.set(_launcherSpeed);
+      _rightLaunchMotor.set(_launcherSpeed);
+      _beltMotor.set(_beltSpeed);
+      _launcherServo.set(_servoLaunchPos);
     }
     else if(_reverseTog.toggleHeld(_joystick, _reverseInt)){
       
-      _beltMotor.set(-.5);
-      _intakeMotor.set(-1);
+      _beltMotor.set(_beltRevSpeed);
+      _intakeMotor.set(_intakeRevSpeed);
     }
     else{
       
@@ -296,11 +306,3 @@ public class Robot extends TimedRobot {
   public void testPeriodic() {
   }
 }
-
-
-//The Yale Jiggawattz FRC 6344
-// Nathan Hartway
-//
-//
-//
-//
